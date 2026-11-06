@@ -62,10 +62,10 @@ linters:
         linters:
           - errcheck
           - gosec
-      - path: internal/sim/
+      - path: internal/story/
         linters:
           - gosec
-        text: "G404" # math/rand is fine for deterministic simulation
+        text: "G404" # math/rand is fine for the scripted demo story
     paths:
       - examples
       - dist
