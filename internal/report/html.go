@@ -276,21 +276,6 @@ func hintName(l int) string {
 	return "?"
 }
 
-// measuredWeeks returns the latest week with merged reps and the one before it.
-func measuredWeeks(weeks []engine.Week) (latest, prev engine.Week, hasLatest, hasPrev bool) {
-	for i := len(weeks) - 1; i >= 0; i-- {
-		if weeks[i].Merged == 0 {
-			continue
-		}
-		if !hasLatest {
-			latest, hasLatest = weeks[i], true
-		} else {
-			return latest, weeks[i], true, true
-		}
-	}
-	return
-}
-
 // deltaText formats a change against last week; upGood says which way is good.
 func deltaText(d float64, upGood bool, format, vs string) (string, string) {
 	if math.Abs(d) < 0.05 {
