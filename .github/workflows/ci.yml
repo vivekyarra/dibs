@@ -149,14 +149,14 @@ jobs:
       contents: read
     defaults:
       run:
-        working-directory: demo-shop
+        working-directory: examples/demo-shop
     steps:
       - uses: actions/checkout@v5
       - uses: astral-sh/setup-uv@v6
-        if: hashFiles('demo-shop/pyproject.toml') != ''
+        if: hashFiles('examples/demo-shop/pyproject.toml') != ''
         with:
           enable-cache: true
-          cache-dependency-glob: demo-shop/uv.lock
+          cache-dependency-glob: examples/demo-shop/uv.lock
       - name: pytest
-        if: hashFiles('demo-shop/pyproject.toml') != ''
+        if: hashFiles('examples/demo-shop/pyproject.toml') != ''
         run: uv run pytest -q

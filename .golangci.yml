@@ -67,7 +67,7 @@ linters:
           - gosec
         text: "G404" # math/rand is fine for deterministic simulation
     paths:
-      - demo-shop
+      - examples
       - dist
       - site
 
@@ -77,7 +77,7 @@ formatters:
   exclusions:
     generated: lax
     paths:
-      - demo-shop
+      - examples
       - dist
       - site
 
