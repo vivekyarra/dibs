@@ -1,0 +1,46 @@
+name: Dibs guard
+description: >-
+  Blocks a pull request that closes an issue reserved as a junior's learning rep
+  (label dibs:reserved:<handle>) unless that junior authored it.
+author: vivekyarra
+branding:
+  icon: shield
+  color: orange
+
+inputs:
+  config-dir:
+    description: Path to the .dibs folder, relative to the workspace.
+    required: false
+    default: .dibs
+  token:
+    description: Token used to read issue labels (needs issues:read).
+    required: false
+    default: ${{ github.token }}
+  go-version:
+    description: Go toolchain used to build dibs from this action's own source.
+    required: false
+    default: '1.27.x'
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ inputs.go-version }}
+        cache-dependency-path: ${{ github.action_path }}/go.sum
+
+    # Build from the action's checked-out source, so a pinned ref or a fork
+    # runs exactly the code it points at (no module proxy involved).
+    - name: Build dibs
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: go build -trimpath -o "$RUNNER_TEMP/dibs" ./cmd/dibs
+
+    - name: Check reservations
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        DIBS_CONFIG_DIR: ${{ inputs.config-dir }}
+      run: '"$RUNNER_TEMP/dibs" guard --config-dir "$DIBS_CONFIG_DIR"'
