@@ -1,0 +1,4 @@
+# Only some fields; the rest come from engine.DefaultPolicy().
+risk_paths: ["migrations/", "app/auth/"]
+score_threshold: 4
+db: custom.sqlite
