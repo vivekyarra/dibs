@@ -76,7 +76,7 @@ func Find(start string) (string, error) {
 		}
 		parent := filepath.Dir(dir)
 		if parent == dir {
-			return "", errors.New("no .dibs/ folder found here or in any parent; run `dibs init --scaffold` in your repo")
+			return "", errors.New("no .dibs/ folder found here or in any parent: run `dibs scaffold --senior <login> --junior <login>` in your repo root, then `dibs init`")
 		}
 		dir = parent
 	}
