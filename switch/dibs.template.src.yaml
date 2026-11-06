@@ -1,0 +1,135 @@
+# Dibs: your AI teammates call dibs on the right work for your juniors.
+#
+# Three agents (a coordinator, a builder, a reviewer from a second vendor),
+# a public team room and a private practice room for one junior, linked.
+# The DIBS PROTOCOL is the instructions of both rooms, so every agent in them
+# is bound by the same rule whatever vendor runs it.
+version: 1
+
+params:
+  team:
+    type: string
+    label: Team name (lowercase)
+    description: Prefix for every agent and room this creates.
+    default: payments
+    pattern: "^[a-z0-9-]+$"
+  junior:
+    type: user
+    label: Junior's username on the messaging app
+    description: The person whose practice room this is.
+  junior_handle:
+    type: string
+    label: Junior's short handle (lowercase)
+    description: The handle in .dibs/team.yaml; names the practice room.
+    default: asha
+    pattern: "^[a-z0-9-]+$"
+  repo:
+    type: string
+    label: GitHub repository (owner/name)
+    description: The repository whose issues Dibs routes. It holds .dibs/ config.
+    pattern: "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+  bridge:
+    type: bridge
+    default: [Discord, Slack, $first]
+  location:
+    type: location
+    description: The machine all three agents run on. They share one dibs ledger.
+    default: local
+    input: advanced
+
+form:
+  advanced: { label: Advanced, open: false }
+
+agents:
+  - name: "{team}-dibs"
+    display_name: dibs
+    description: Calls dibs on the right tickets for juniors, gates hints, keeps the skill map.
+    provider: claude
+    location: "{location}"
+    directory: "{$agents_dir}/{team}-dibs"
+    repo: "https://github.com/{repo}"
+    addressing: anyone
+    auto_mode: true
+    connections: [{ service: github, access: write, repos: ["{repo}"] }]
+    instructions: |
+      {{include agents/dibs.md}}
+  - name: "{team}-builder"
+    display_name: builder
+    description: Implements tickets. Coaches (never solves) on reserved ones.
+    provider: claude
+    location: "{location}"
+    directory: "{$agents_dir}/{team}-builder"
+    repo: "https://github.com/{repo}"
+    addressing: anyone
+    auto_mode: true
+    connections: [{ service: github, access: write, repos: ["{repo}"] }]
+    instructions: |
+      {{include agents/builder.md}}
+  - name: "{team}-reviewer"
+    display_name: reviewer
+    description: Reviews PRs. Socratic on reserved ones; flags teaching moments.
+    provider: codex
+    location: "{location}"
+    directory: "{$agents_dir}/{team}-reviewer"
+    repo: "https://github.com/{repo}"
+    addressing: anyone
+    auto_mode: true
+    connections: [{ service: github, access: read, repos: ["{repo}"] }]
+    instructions: |
+      {{include agents/reviewer.md}}
+
+group:
+  name: "dibs-{team}"
+  description: Dibs learning workflow for the {team} team
+
+rooms:
+  - name: "{team}-team"
+    description: Team room. Dibs proposes reservations here; seniors approve.
+    bridge: "{bridge}"
+    channel_type: channel_public
+    agents: ["{team}-dibs", "{team}-builder", "{team}-reviewer"]
+    users: ["{$creator}", "{junior}"]
+    instructions: |
+      {{include agents/protocol.md}}
+    aliases:
+      "{team}-dibs": dibs
+      "{team}-builder": builder
+      "{team}-reviewer": reviewer
+    roles:
+      - name: socratic-reviewer
+        exclusive: true
+        instructions: Review PRs on reserved tickets Socratically, as the DIBS PROTOCOL says.
+    docs:
+      - name: dibs-protocol
+        description: The rules every agent follows in Dibs rooms
+        instructions: Read before helping on any ticket.
+        content: |
+          {{include agents/protocol.md}}
+    kickoff: |
+      @{team}-dibs hi! Run `dibs doctor`, then `dibs init` with the config in the repo's .dibs/
+      folder, and deliver what each returns. Introduce yourself in two lines, then run a sweep.
+
+  - name: "{junior_handle}-practice"
+    description: Private practice room. Ask anything. Agents give hints, not answers.
+    bridge: "{bridge}"
+    channel_type: channel_private
+    agents: ["{team}-dibs", "{team}-builder", "{team}-reviewer"]
+    users: ["{junior}"]
+    instructions: |
+      {{include agents/protocol.md}}
+    aliases:
+      "{team}-dibs": dibs
+      "{team}-builder": builder
+      "{team}-reviewer": reviewer
+    docs:
+      - name: dibs-protocol
+        description: The rules every agent follows in Dibs rooms
+        instructions: Read before helping on any ticket.
+        content: |
+          {{include agents/protocol.md}}
+    kickoff: |
+      @{team}-dibs say hello to {junior_handle} in two lines: what this room is, that every
+      question is welcome here, and that hints come in levels that unlock as they try.
+
+links:
+  - { from: "{team}-team", to: "{junior_handle}-practice", label: practice }
