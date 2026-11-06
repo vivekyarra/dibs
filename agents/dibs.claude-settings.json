@@ -1,0 +1,6 @@
+{
+  "permissions": {
+    "allow": ["Bash(dibs:*)", "Bash(gh:*)", "Bash(git:*)"],
+    "ask": ["Bash(dibs approve:*)"]
+  }
+}
