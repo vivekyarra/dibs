@@ -1,0 +1,41 @@
+# Binaries
+/dibs
+/dibs.exe
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Build / release / generated output
+dist/
+site/
+demo-out/
+coverage.out
+coverage.html
+
+# Local state
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.db-journal
+
+# Python (demo-shop)
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Editors / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Local previews and demo output
+.preview/
+dibs-demo/
