@@ -1,0 +1,86 @@
+# golangci-lint v2 configuration (golangci-lint-action@v8 installs v2.x).
+version: "2"
+
+run:
+  timeout: 5m
+  tests: true
+
+linters:
+  default: none
+  enable:
+    - errcheck
+    - govet
+    - staticcheck
+    - ineffassign
+    - unused
+    - gosec
+    - misspell
+    - revive
+  settings:
+    errcheck:
+      exclude-functions:
+        - (io.Closer).Close
+        - (*os.File).Close
+        - (*database/sql.DB).Close
+        - (*database/sql.Rows).Close
+        - (*database/sql.Tx).Rollback
+        - fmt.Fprint
+        - fmt.Fprintf
+        - fmt.Fprintln
+    gosec:
+      excludes:
+        - G104 # unhandled errors: covered by errcheck
+        - G204 # subprocess launched with variable: we intentionally exec gh/git
+        - G301 # directory permissions 0755 are fine for a CLI's output dirs
+        - G304 # file inclusion via variable: CLI reads user-supplied paths
+        - G306 # 0644 write permissions are fine for generated reports
+        - G703 # CLI writes the paths its user passes (--out, --html, step summary)
+    revive:
+      rules:
+        - name: blank-imports
+        - name: context-as-argument
+        - name: dot-imports
+        - name: error-return
+        - name: error-strings
+        - name: errorf
+        - name: increment-decrement
+        - name: indent-error-flow
+        - name: range
+        - name: receiver-naming
+        - name: redefines-builtin-id
+        - name: superfluous-else
+        - name: time-naming
+        - name: unreachable-code
+        - name: var-declaration
+  exclusions:
+    generated: lax
+    presets:
+      - common-false-positives
+      - std-error-handling
+    rules:
+      - path: _test\.go
+        linters:
+          - errcheck
+          - gosec
+      - path: internal/sim/
+        linters:
+          - gosec
+        text: "G404" # math/rand is fine for deterministic simulation
+    paths:
+      - demo-shop
+      - dist
+      - site
+
+formatters:
+  enable:
+    - gofmt
+  exclusions:
+    generated: lax
+    paths:
+      - demo-shop
+      - dist
+      - site
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
