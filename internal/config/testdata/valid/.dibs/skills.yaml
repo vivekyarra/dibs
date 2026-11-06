@@ -1,0 +1,7 @@
+- name: idempotency
+  description: Same request twice, same effect once.
+  paths: ["app/orders/"]
+  keywords: ["retry", "duplicate"]
+- name: http-handlers
+  description: Request handling.
+  paths: ["app/api/"]

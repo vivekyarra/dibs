@@ -1,0 +1,18 @@
+repo: acme/demo-shop
+team_room: dibs-team
+agents:
+  dibs: dibs-bot
+seniors:
+  - handle: maya
+    github: Maya-GH
+    chat: ["@Maya", "maya.s"]
+juniors:
+  - handle: asha
+    github: asha-dev
+    chat: ["@asha"]
+    skills:
+      idempotency: 1
+      http-handlers: 3
+  - handle: ben
+    github: ben-dev
+    practice_room: ben-room
