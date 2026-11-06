@@ -20,6 +20,8 @@
 go run github.com/vivekyarra/dibs/cmd/dibs@latest demo   # the whole story in 10 seconds, no setup
 ```
 
+<p align="center"><a href="https://vivekyarra.github.io/dibs/"><b>Live dashboard</b></a> · <a href="https://github.com/vivekyarra/dibs-demo-shop/pull/12"><b>dibs-guard on a real PR</b></a> · <a href="https://github.com/vivekyarra/dibs/releases"><b>Download</b></a></p>
+
 ---
 
 ## The problem
@@ -72,6 +74,20 @@ builder: What would the server need to remember if the same request arrived twic
 ```
 
 The full transcript, report and dashboard land in `./dibs-demo/`.
+
+## Live on GitHub
+
+Dibs ran end to end against a real repository, [`vivekyarra/dibs-demo-shop`](https://github.com/vivekyarra/dibs-demo-shop), with the same binary:
+
+| Step | Real artifact |
+|---|---|
+| The sweep scores 10 real issues and picks **#3** as the rep; the senior approves | [Issue #3](https://github.com/vivekyarra/dibs-demo-shop/issues/3): `dibs:reserved:asha` and skill labels, the Dibs comment |
+| The builder opens a real fix that closes #3, and **`dibs-guard` blocks it** | [PR #12](https://github.com/vivekyarra/dibs-demo-shop/pull/12) · [guard run, attempt 1: blocked](https://github.com/vivekyarra/dibs-demo-shop/actions/runs/42250427039/attempts/1) |
+| The deadline moves; Dibs **releases** the rep, and the **same check passes** | [guard run, attempt 2: passed](https://github.com/vivekyarra/dibs-demo-shop/actions/runs/42250427039/attempts/2) · `dibs:released` on #3 |
+| The PR merges; the ledger records the rep and queues the junior's walkthrough | #3 closed by PR #12 |
+| The next sweep picks **#6** as the next rep | [Issue #6](https://github.com/vivekyarra/dibs-demo-shop/issues/6) |
+
+The dashboard from `dibs demo` is published at **[vivekyarra.github.io/dibs](https://vivekyarra.github.io/dibs/)**.
 
 ## How it works
 
