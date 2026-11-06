@@ -246,13 +246,14 @@ func normPath(p string) string {
 // as not the top pick. Ties go to the lower issue number (older work first).
 func PickTop(ds []Decision) []Decision {
 	best := -1
+	var top Decision
 	for i, d := range ds {
 		if d.Reason != ReasonProposed {
 			continue
 		}
-		if best < 0 || d.Breakdown.Score > ds[best].Breakdown.Score ||
-			(d.Breakdown.Score == ds[best].Breakdown.Score && d.Number < ds[best].Number) {
-			best = i
+		if best < 0 || d.Breakdown.Score > top.Breakdown.Score ||
+			(d.Breakdown.Score == top.Breakdown.Score && d.Number < top.Number) {
+			best, top = i, d
 		}
 	}
 	out := make([]Decision, len(ds))

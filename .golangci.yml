@@ -34,8 +34,7 @@ linters:
         - G301 # directory permissions 0755 are fine for a CLI's output dirs
         - G304 # file inclusion via variable: CLI reads user-supplied paths
         - G306 # 0644 write permissions are fine for generated reports
-    misspell:
-      locale: US
+        - G703 # CLI writes the paths its user passes (--out, --html, step summary)
     revive:
       rules:
         - name: blank-imports
