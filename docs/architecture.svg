@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" width="960" height="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Dibs architecture</title>
+  <desc id="d">Discord channels connect through the Switch Discord bridge to a Switch server holding rooms, instructions, documents and approvals. Three agents (dibs and builder on Claude Code, reviewer on Codex) and the dibs-intake custom agent sit in the rooms. Agents call the dibs Go binary, which owns a SQLite ledger and talks to GitHub. A GitHub Action runs dibs guard.</desc>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#57606a"/>
+    </marker>
+    <style>
+      .h { font-size: 15px; font-weight: 700; fill: #1f2328; }
+      .s { font-size: 12px; fill: #424a53; }
+      .xs { font-size: 11px; fill: #57606a; }
+      .chip { font-size: 12px; fill: #1f2328; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; fill: #1f2328; }
+      .ln { stroke: #57606a; stroke-width: 1.6; fill: none; }
+    </style>
+  </defs>
+
+  <!-- solid light background so the image reads the same on GitHub light and dark -->
+  <rect x="0" y="0" width="960" height="700" rx="14" fill="#ffffff" stroke="#d0d7de"/>
+
+  <text x="28" y="38" class="h" font-size="18">Dibs: the model proposes, the ledger decides</text>
+  <text x="28" y="58" class="s">Switch holds the room and the rule. The dibs binary holds every decision. GitHub enforces the reservation.</text>
+
+  <!-- Discord -->
+  <rect x="200" y="78" width="560" height="76" rx="10" fill="#eef1ff" stroke="#5865f2"/>
+  <text x="216" y="98" class="h" fill="#3c45a5">Discord</text>
+  <rect x="300" y="108" width="200" height="34" rx="6" fill="#ffffff" stroke="#5865f2"/>
+  <text x="400" y="123" class="chip" text-anchor="middle" font-weight="600">#payments-team</text>
+  <text x="400" y="137" class="xs" text-anchor="middle">team room · Ravi + Asha</text>
+  <rect x="520" y="108" width="220" height="34" rx="6" fill="#ffffff" stroke="#5865f2"/>
+  <text x="630" y="123" class="chip" text-anchor="middle" font-weight="600">#asha-practice</text>
+  <text x="630" y="137" class="xs" text-anchor="middle">private · Asha + agents</text>
+
+  <!-- bridge arrow -->
+  <path d="M480 154 L480 186" class="ln" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text x="490" y="175" class="xs">Switch Discord bridge</text>
+
+  <!-- Switch -->
+  <rect x="40" y="188" width="880" height="134" rx="10" fill="#fbefff" stroke="#8250df" stroke-width="1.5"/>
+  <text x="56" y="210" class="h" fill="#6639ba">Switch server (local, Docker, managed by Console)</text>
+  <text x="904" y="210" class="xs" text-anchor="end">created in one step from switch/dibs.template.yaml</text>
+
+  <rect x="56" y="222" width="200" height="88" rx="6" fill="#ffffff" stroke="#c297ff"/>
+  <text x="68" y="242" class="chip" font-weight="600">Group + link</text>
+  <text x="68" y="260" class="xs">group dibs-payments</text>
+  <text x="68" y="276" class="xs">link team → practice</text>
+  <text x="68" y="292" class="xs">label: practice</text>
+
+  <rect x="268" y="222" width="200" height="88" rx="6" fill="#ffffff" stroke="#c297ff"/>
+  <text x="280" y="242" class="chip" font-weight="600">Room instructions</text>
+  <text x="280" y="260" class="xs">DIBS PROTOCOL v1, read by</text>
+  <text x="280" y="276" class="xs">every agent on join, whatever</text>
+  <text x="280" y="292" class="xs">vendor runs it</text>
+
+  <rect x="480" y="222" width="212" height="88" rx="6" fill="#ffffff" stroke="#c297ff"/>
+  <text x="492" y="242" class="chip" font-weight="600">Room documents</text>
+  <text x="492" y="260" class="xs">dibs-protocol · skill-map-asha</text>
+  <text x="492" y="276" class="xs">dibs-ledger</text>
+  <text x="492" y="292" class="xs">only the creating agent can edit</text>
+
+  <rect x="704" y="222" width="200" height="88" rx="6" fill="#ffffff" stroke="#c297ff"/>
+  <text x="716" y="242" class="chip" font-weight="600">Addressing + approvals</text>
+  <text x="716" y="260" class="xs">who may drive which agent</text>
+  <text x="716" y="276" class="xs">Allow once / Decline,</text>
+  <text x="716" y="292" class="xs">answered by the owner (senior)</text>
+
+  <!-- arrows Switch to agents -->
+  <path d="M150 322 L150 356" class="ln" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <path d="M370 322 L370 356" class="ln" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <path d="M590 322 L590 356" class="ln" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <path d="M810 356 L810 322" class="ln" marker-end="url(#arr)"/>
+  <text x="158" y="336" class="xs">post_message · read_context</text>
+  <text x="158" y="350" class="xs">update_room_document</text>
+  <text x="818" y="344" class="xs">agent protocol</text>
+
+  <!-- Agents -->
+  <rect x="60" y="358" width="180" height="70" rx="8" fill="#fff1e5" stroke="#bc4c00"/>
+  <text x="150" y="382" class="h" text-anchor="middle">dibs</text>
+  <text x="150" y="400" class="s" text-anchor="middle">Claude Code</text>
+  <text x="150" y="417" class="xs" text-anchor="middle">triage · approve · record · mirror</text>
+
+  <rect x="280" y="358" width="180" height="70" rx="8" fill="#fff1e5" stroke="#bc4c00"/>
+  <text x="370" y="382" class="h" text-anchor="middle">builder</text>
+  <text x="370" y="400" class="s" text-anchor="middle">Claude Code</text>
+  <text x="370" y="417" class="xs" text-anchor="middle">builds others · coaches reps</text>
+
+  <rect x="500" y="358" width="180" height="70" rx="8" fill="#dafbe1" stroke="#1a7f37"/>
+  <text x="590" y="382" class="h" text-anchor="middle">reviewer</text>
+  <text x="590" y="400" class="s" text-anchor="middle">Codex</text>
+  <text x="590" y="417" class="xs" text-anchor="middle">Socratic review · teaching flags</text>
+
+  <rect x="720" y="358" width="180" height="70" rx="8" fill="#f6f8fa" stroke="#57606a" stroke-dasharray="5 3"/>
+  <text x="810" y="382" class="h" text-anchor="middle">dibs-intake</text>
+  <text x="810" y="400" class="s" text-anchor="middle">custom agent</text>
+  <text x="810" y="417" class="xs" text-anchor="middle">dibs intake serve</text>
+
+  <!-- agents to core -->
+  <path d="M150 428 L150 480" class="ln" marker-end="url(#arr)"/>
+  <path d="M370 428 L370 480" class="ln" marker-end="url(#arr)"/>
+  <path d="M590 428 L590 480" class="ln" marker-end="url(#arr)"/>
+  <text x="160" y="452" class="xs">runs dibs &lt;command&gt;,</text>
+  <text x="160" y="466" class="xs">posts the JSON messages</text>
+
+  <!-- core -->
+  <rect x="40" y="482" width="640" height="190" rx="10" fill="#ddf4ff" stroke="#0969da" stroke-width="1.5"/>
+  <text x="56" y="505" class="h" fill="#0550ae">dibs binary (Go, single executable)</text>
+  <text x="664" y="505" class="xs" text-anchor="end">exit 0 ok · 2 rule refused · 1 error</text>
+
+  <rect x="56" y="518" width="296" height="140" rx="6" fill="#ffffff" stroke="#54aeff"/>
+  <text x="68" y="538" class="chip" font-weight="600">engine (pure functions, unit tested)</text>
+  <text x="68" y="558" class="mono" font-weight="600">scoring</text><text x="136" y="558" class="xs">fit to the junior's skill map</text>
+  <text x="68" y="576" class="mono" font-weight="600">hints</text><text x="136" y="576" class="xs">L1–L4 gate by attempts/time</text>
+  <text x="68" y="594" class="mono" font-weight="600">checker</text><text x="136" y="594" class="xs">hint text vs level rules</text>
+  <text x="68" y="612" class="mono" font-weight="600">states</text><text x="136" y="612" class="xs">allowed transitions only</text>
+  <text x="68" y="630" class="mono" font-weight="600">skills</text><text x="136" y="630" class="xs">evidence-based level moves</text>
+  <text x="68" y="648" class="mono" font-weight="600">release</text><text x="136" y="648" class="xs">deadline · stuck · timeout</text>
+
+  <rect x="366" y="518" width="298" height="64" rx="6" fill="#ffffff" stroke="#54aeff"/>
+  <text x="378" y="538" class="chip" font-weight="600">ledger.sqlite</text>
+  <text x="378" y="556" class="xs">tickets · skill_levels · append-only events</text>
+  <text x="378" y="572" class="xs">WAL, shared by all three agents</text>
+
+  <rect x="366" y="594" width="298" height="64" rx="6" fill="#ffffff" stroke="#54aeff"/>
+  <text x="378" y="614" class="chip" font-weight="600">outputs</text>
+  <text x="378" y="632" class="xs">mirror → skill map + ledger documents</text>
+  <text x="378" y="648" class="xs">report --md / --html dashboard</text>
+
+  <!-- GitHub -->
+  <rect x="720" y="482" width="200" height="190" rx="10" fill="#f6f8fa" stroke="#57606a" stroke-width="1.5"/>
+  <text x="736" y="505" class="h">GitHub</text>
+  <text x="736" y="526" class="xs">issues · PRs · labels</text>
+  <text x="736" y="542" class="mono">dibs:reserved:asha</text>
+  <text x="736" y="558" class="mono">skill:idempotency</text>
+  <rect x="732" y="570" width="176" height="92" rx="6" fill="#ffebe9" stroke="#cf222e"/>
+  <text x="744" y="589" class="chip" font-weight="600">Action: dibs guard</text>
+  <text x="744" y="606" class="xs">required check on main.</text>
+  <text x="744" y="621" class="xs">Fails a PR closing a</text>
+  <text x="744" y="636" class="xs">reserved issue unless</text>
+  <text x="744" y="651" class="xs">Asha opened it.</text>
+
+  <!-- core to GitHub -->
+  <path d="M680 540 L718 540" class="ln" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text x="699" y="532" class="xs" text-anchor="middle">REST</text>
+
+  <!-- GitHub webhooks to intake -->
+  <path d="M870 482 L870 430" class="ln" marker-end="url(#arr)"/>
+  <text x="864" y="460" class="xs" text-anchor="end">issue webhook</text>
+</svg>
