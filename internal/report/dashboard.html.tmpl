@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="generator" content="dibs report">
+<title>Dibs ramp dashboard{{if .Team}} · {{.Team}}{{end}}</title>
+<style>
+:root{
+  --bg:#f5f6fa;--surface:#fff;--surface-2:#f0f2f8;--border:#e2e5ee;--text:#131726;--muted:#565e72;
+  --accent:#4f46e5;--accent-2:#7c3aed;--accent-soft:#eef0ff;--on-accent:#fff;
+  --good:#0b7a47;--good-bg:#e5f6ee;--bad:#b42318;--bad-bg:#fdecea;
+  --amber-bg:#fff3d1;--amber-fg:#7a4a00;--amber-line:#e9a800;
+  --h0:#eaedf4;--h1:#cdd6fb;--h2:#92a5f4;--h3:#4f63e3;--h4:#2a2c9f;
+  --t0:#5b6377;--t1:#27306e;--t2:#141a55;--t3:#fff;--t4:#fff;
+  --shadow:0 1px 2px rgba(17,24,39,.05),0 8px 24px -12px rgba(17,24,39,.12);
+  --hero:linear-gradient(135deg,#eef0ff 0%,#f7f0ff 55%,#fff7e8 100%);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0c0f16;--surface:#141924;--surface-2:#1a2030;--border:#262d3e;--text:#e9ecf4;--muted:#a0a8bc;
+    --accent:#8e96ff;--accent-2:#b99cff;--accent-soft:#1e2244;--on-accent:#0c0f16;
+    --good:#4ade80;--good-bg:#0f2a1c;--bad:#fb8a80;--bad-bg:#33140f;
+    --amber-bg:#352606;--amber-fg:#fcd67c;--amber-line:#d39b10;
+    --h0:#1d2332;--h1:#27336a;--h2:#3b51b9;--h3:#7083f5;--h4:#b9c2ff;
+    --t0:#8e97ad;--t1:#cdd4ff;--t2:#fff;--t3:#0c0f16;--t4:#0c0f16;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -14px rgba(0,0,0,.7);
+    --hero:linear-gradient(135deg,#171b33 0%,#1d1630 55%,#251d0e 100%);
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-feature-settings:"tnum" 1}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--surface);padding:8px 12px;border-radius:8px;z-index:9}
+.skip:focus{left:8px}
+header.hero{background:var(--hero);border-bottom:1px solid var(--border)}
+.hero .wrap{padding-top:28px;padding-bottom:30px}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:40px;height:40px;flex:none}
+.mark-bg{fill:var(--accent)}
+.mark-fg{stroke:var(--on-accent)}
+.mark-dot{fill:var(--on-accent)}
+.wordmark{font-size:30px;font-weight:800;letter-spacing:-.03em;margin:0;line-height:1}
+.tagline{font-size:clamp(20px,3.4vw,30px);font-weight:700;letter-spacing:-.02em;line-height:1.2;margin:22px 0 10px;max-width:22ch}
+.tagline em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--muted);font-size:14px;margin:0;padding:0;list-style:none}
+.meta b{color:var(--text);font-weight:600}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--amber-bg);color:var(--amber-fg);border:1px solid var(--amber-line);border-radius:999px;padding:3px 11px;font-size:13px;font-weight:700;cursor:help;white-space:nowrap}
+.badge::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--amber-line)}
+.badge.sm{font-size:11px;padding:1px 8px;font-weight:600}
+.badge.sm::before{width:6px;height:6px}
+.samplenote{margin:18px 0 0;background:var(--amber-bg);color:var(--amber-fg);border-left:4px solid var(--amber-line);padding:10px 14px;border-radius:8px;font-size:14px;max-width:760px}
+nav.juniors{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+nav.juniors a{background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:4px 12px;text-decoration:none;color:var(--text);font-weight:600;font-size:14px}
+main{padding:28px 0 8px}
+section.junior{margin-bottom:44px}
+.jhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:16px}
+.jhead h2{margin:0;font-size:24px;letter-spacing:-.02em}
+.jhead .at{color:var(--accent)}
+.jhead p{margin:0;color:var(--muted);font-size:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px;margin:0 0 16px;padding:0;list-style:none}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.kpi h3{margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.kpi .v{font-size:30px;font-weight:800;letter-spacing:-.03em;margin:6px 0 2px;line-height:1.1}
+.kpi .v small{font-size:15px;font-weight:600;color:var(--muted);margin-left:3px;letter-spacing:0}
+.kpi .s{margin:0;color:var(--muted);font-size:13px}
+.delta{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:1px 7px;margin-top:6px}
+.delta.good{color:var(--good);background:var(--good-bg)}
+.delta.bad{color:var(--bad);background:var(--bad-bg)}
+.delta.flat{color:var(--muted);background:var(--surface-2)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:16px;margin-bottom:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 18px 14px;box-shadow:var(--shadow);min-width:0}
+.card h3{margin:0;font-size:16px;letter-spacing:-.01em}
+.card .cap{margin:2px 0 10px;color:var(--muted);font-size:13px}
+svg.chart{width:100%;height:auto;display:block}
+svg.heat{width:100%;height:auto;display:block}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.grid{stroke:var(--border);stroke-width:1}
+.axis{fill:var(--muted);font-size:12px}
+.sim-t{fill:var(--amber-fg);font-size:10px;font-weight:700}
+.note{fill:var(--muted);font-size:11px;font-style:italic}
+.val{fill:var(--text);font-size:12px;font-weight:700}
+.line{fill:none;stroke:var(--accent);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.pt{fill:var(--accent);stroke:var(--surface);stroke-width:2.5}
+.pt.sim{fill:var(--surface);stroke:var(--accent);stroke-width:2.5}
+.bar{fill:var(--accent)}
+.bar.sim{fill:var(--accent);fill-opacity:.42;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3}
+.base{stroke:var(--amber-line);stroke-width:2;stroke-dasharray:6 5}
+.base-t{fill:var(--amber-fg);font-size:11px;font-weight:700}
+.skill{fill:var(--text);font-size:13px;font-weight:600}
+.h0{fill:var(--h0)}.h1{fill:var(--h1)}.h2{fill:var(--h2)}.h3{fill:var(--h3)}.h4{fill:var(--h4)}
+.t0{fill:var(--t0)}.t1{fill:var(--t1)}.t2{fill:var(--t2)}.t3{fill:var(--t3)}.t4{fill:var(--t4)}
+.t0,.t1,.t2,.t3,.t4{font-size:12px;font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:12px 0 0;padding:0;list-style:none;font-size:13px;color:var(--muted)}
+.legend li{display:flex;align-items:center;gap:7px}
+.sw{width:22px;height:16px;border-radius:4px;display:inline-grid;place-items:center;font-size:10px;font-weight:800}
+.sw.h0{background:var(--h0);color:var(--t0)}.sw.h1{background:var(--h1);color:var(--t1)}.sw.h2{background:var(--h2);color:var(--t2)}.sw.h3{background:var(--h3);color:var(--t3)}.sw.h4{background:var(--h4);color:var(--t4)}
+.legend b{color:var(--text);font-weight:600}
+.keyline{display:flex;flex-wrap:wrap;gap:4px 14px;margin:8px 0 0;font-size:12px;color:var(--muted)}
+.keyline span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--accent);display:inline-block}
+.dot.hollow{background:transparent;border:2px solid var(--accent)}
+.dash{width:18px;border-top:2px dashed var(--amber-line);display:inline-block}
+table{width:100%;border-collapse:collapse;font-size:14px}
+caption{text-align:left;font-weight:700;font-size:16px;padding:0 0 10px}
+th,td{padding:10px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}
+thead th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;background:var(--surface-2);white-space:nowrap}
+thead th:first-child{border-top-left-radius:8px}thead th:last-child{border-top-right-radius:8px}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
+tbody th{font-weight:600;white-space:nowrap}
+td.num{text-align:center;font-variant-numeric:tabular-nums}
+.pr{font-weight:700;white-space:nowrap}
+.hint{display:inline-block;border-radius:6px;padding:1px 8px;font-size:12px;font-weight:700;white-space:nowrap;background:var(--surface-2);color:var(--text)}
+.hint.l0,.hint.l1{background:var(--good-bg);color:var(--good)}
+.hint.l3,.hint.l4{background:var(--accent-soft);color:var(--accent)}
+.out{font-size:13px;font-weight:600;white-space:nowrap}
+.out.m{color:var(--good)}.out.r{color:var(--amber-fg)}
+.reason{display:block;color:var(--muted);font-size:12px;font-weight:400;white-space:normal}
+.chg{margin:0;padding:0;list-style:none;font-size:13px}
+.chg li{white-space:nowrap}
+.chg .arrow{color:var(--accent);font-weight:700}
+.muted{color:var(--muted)}
+.empty{text-align:center;padding:40px 20px}
+.empty .ill{font-size:40px;line-height:1}
+.empty h3{font-size:18px;margin:12px 0 6px}
+.empty p{color:var(--muted);margin:0 auto;max-width:52ch}
+footer{border-top:1px solid var(--border);margin-top:20px;padding:24px 0 40px;color:var(--muted);font-size:13px}
+footer h2{font-size:14px;color:var(--text);margin:0 0 8px}
+footer dl{display:grid;grid-template-columns:minmax(0,max-content) 1fr;gap:4px 14px;margin:0 0 14px}
+footer dt{font-weight:700;color:var(--text)}footer dd{margin:0}
+@media (max-width:560px){
+  .wrap{padding:0 16px}
+  .card{padding:14px 12px 10px;border-radius:14px}
+  .kpi .v{font-size:26px}
+  th,td{padding:8px 7px}
+  footer dl{grid-template-columns:1fr}
+  footer dd{margin-bottom:6px}
+}
+@media print{body{background:#fff}.card,.kpi{box-shadow:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to dashboard</a>
+<header class="hero">
+  <div class="wrap">
+    <div class="brand">{{.Logo}}<p class="wordmark">Dibs</p>
+      {{if .AnySample}}<span class="badge" role="note" title="Weeks tagged sample come from dibs demo, which runs the real Dibs rules on a scripted team. Run it yourself: dibs demo.">Sample team</span>{{end}}
+    </div>
+    <h1 class="tagline">The AI does the work. <em>Your juniors still get the reps.</em></h1>
+    <ul class="meta">
+      {{if .Team}}<li>Team <b>{{.Team}}</b></li>{{end}}
+      {{if .Repo}}<li>Repo <b>{{.Repo}}</b></li>{{end}}
+      <li>Generated <time datetime="{{.GeneratedISO}}"><b>{{.Generated}}</b></time></li>
+    </ul>
+    {{if .AnySample}}<p class="samplenote" id="sample"><strong>Sample team.</strong> Weeks tagged <em>sample</em> come from <code>dibs demo</code>, which runs the real Dibs rules on a scripted team. Point Dibs at your repo and this page fills with your own team.</p>{{end}}
+    {{if gt (len .Juniors) 1}}<nav class="juniors" aria-label="Juniors">{{range .Juniors}}<a href="#{{.ID}}">@{{.Handle}}</a>{{end}}</nav>{{end}}
+  </div>
+</header>
+
+<main id="main" class="wrap">
+{{if not .Juniors}}
+  <div class="card empty">
+    <div class="ill" aria-hidden="true">🌱</div>
+    <h3>No juniors on the ledger yet</h3>
+    <p>Add a junior to the Dibs config and run <code>@dibs sweep</code>. Once @dibs calls dibs on a ticket for them and they merge it, their ramp shows up here.</p>
+  </div>
+{{end}}
+{{range .Juniors}}
+<section class="junior" id="{{.ID}}" aria-labelledby="{{.ID}}-h">
+  <div class="jhead">
+    <h2 id="{{.ID}}-h"><span class="at">@</span>{{.Handle}}</h2>
+    <p>{{.Summary}}</p>
+    {{if .AnySample}}<span class="badge sm" title="Includes sample weeks">includes sample weeks</span>{{end}}
+  </div>
+
+  {{if .Empty}}
+  <div class="card empty">
+    <div class="ill" aria-hidden="true">🎯</div>
+    <h3>No reps yet for @{{.Handle}}</h3>
+    <p>When @dibs calls dibs on a ticket for {{.Handle}} and they merge it, hint depth, senior time and skill growth will appear here.</p>
+  </div>
+  {{else}}
+  <ul class="kpis" aria-label="Key numbers for {{.Handle}}">
+    {{range .KPIs}}<li class="kpi" title="{{.Help}}">
+      <h3>{{.Label}}</h3>
+      <p class="v">{{.Value}}{{if .Unit}}<small>{{.Unit}}</small>{{end}}</p>
+      {{if .Sub}}<p class="s">{{.Sub}}</p>{{end}}
+      {{if .Delta}}<span class="delta {{.DeltaClass}}">{{.Delta}}</span>{{end}}
+    </li>{{end}}
+  </ul>
+
+  <div class="grid2">
+    <figure class="card" style="margin:0">
+      <h3>Hint depth</h3>
+      <p class="cap">Average of the deepest hint used per merged rep.</p>
+      {{.HintChart}}
+      <figcaption class="keyline"><span><i class="dot" aria-hidden="true"></i> real week</span><span><i class="dot hollow" aria-hidden="true"></i> sample week</span></figcaption>
+    </figure>
+    <figure class="card" style="margin:0">
+      <h3>Senior minutes per rep <span class="muted" style="font-weight:500">(estimate)</span></h3>
+      <p class="cap">Approvals, review comments and teaching moments, against the no-Dibs baseline.</p>
+      {{.MinutesChart}}
+      <figcaption class="keyline"><span><i class="dash" aria-hidden="true"></i> baseline per PR without Dibs</span><span>faded bars = sample</span></figcaption>
+    </figure>
+  </div>
+  {{end}}
+
+  {{if .Heatmap}}
+  <figure class="card" style="margin:0 0 16px">
+    <h3>Skill map</h3>
+    <p class="cap">{{.HeatmapCaption}}</p>
+    <div class="scroll">{{.Heatmap}}</div>
+    <figcaption><ul class="legend" aria-label="Skill level legend">
+      {{range $.Levels}}<li><span class="sw {{.Class}}" aria-hidden="true">{{.Abbr}}</span><span><b>{{.Name}}</b> · {{.Meaning}}</span></li>{{end}}
+    </ul></figcaption>
+  </figure>
+  {{end}}
+
+  {{if .Rows}}
+  <div class="card">
+    <div class="scroll">
+    <table>
+      <caption>Reps <span class="muted" style="font-weight:500;font-size:13px">· newest first</span></caption>
+      <thead><tr>
+        <th scope="col">Week</th><th scope="col">PR</th><th scope="col">Ticket</th><th scope="col">Max hint</th>
+        <th scope="col" style="text-align:center">Review rounds</th><th scope="col">Outcome</th><th scope="col">Skill changes</th>
+      </tr></thead>
+      <tbody>
+      {{range .Rows}}<tr>
+        <th scope="row"><span title="{{.Week}}">{{.WeekShort}}</span>{{if .Sample}}<br><span class="badge sm" title="Sample rep">sample</span>{{end}}</th>
+        <td class="pr">{{if .URL}}<a href="{{.URL}}" rel="noopener">#{{.Number}}</a>{{else}}#{{.Number}}{{end}}</td>
+        <td>{{.Title}}</td>
+        <td>{{if .Released}}<span class="hint">—</span>{{else}}<span class="hint l{{.Hint}}">L{{.Hint}} · {{.HintName}}</span>{{end}}</td>
+        <td class="num">{{.Rounds}}</td>
+        <td>{{if .Released}}<span class="out r">Released{{if .Reason}}<span class="reason">{{.Reason}}</span>{{end}}</span>{{else}}<span class="out m">Merged</span>{{end}}</td>
+        <td>{{if .Changes}}<ul class="chg">{{range .Changes}}<li>{{.Skill}} {{.From}} <span class="arrow" aria-label="to">→</span> {{.To}}</li>{{end}}</ul>{{else}}<span class="muted">—</span>{{end}}</td>
+      </tr>{{end}}
+      </tbody>
+    </table>
+    </div>
+  </div>
+  {{end}}
+</section>
+{{end}}
+</main>
+
+<footer>
+  <div class="wrap">
+    <h2>How to read this</h2>
+    <dl>
+      <dt>Rep</dt><dd>A ticket @dibs reserved for a junior and they merged themselves. Released tickets were finished by the builder agent when delivery was at risk; the junior got a walkthrough.</dd>
+      <dt>Hint ladder</dt><dd>{{range $i, $h := .Hints}}{{if $i}} · {{end}}{{$h}}{{end}}. Agents must ask the ledger before each level.</dd>
+      <dt>Independence</dt><dd>Share of merged reps that needed at most an L1 nudge.</dd>
+      <dt>Senior time</dt><dd>An estimate: 1 min per approval, 2 per senior comment, 5 per teaching moment, compared with a {{.Baseline}}-minute-per-PR baseline (team estimate).</dd>
+      <dt>Skill levels</dt><dd>Unseen → Exposed → Guided → Independent → Fluent, moved only by evidence from merged reps.</dd>
+    </dl>
+    <p>Dibs · built on Switch.</p>
+  </div>
+</footer>
+</body>
+</html>
