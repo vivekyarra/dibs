@@ -316,7 +316,8 @@ func TestFindWalksUp(t *testing.T) {
 	wd, _ := os.Getwd()
 	t.Cleanup(func() { os.Chdir(wd) })
 	os.Chdir(deep)
-	if got, _ := Find("."); got != filepath.Join(root, "a", ".dibs") {
+	want, _ := filepath.EvalSymlinks(filepath.Join(root, "a", ".dibs")) // macOS: /var is a symlink to /private/var
+	if got, _ := Find("."); got != want && got != filepath.Join(root, "a", ".dibs") {
 		t.Fatalf("relative: %q", got)
 	}
 }
